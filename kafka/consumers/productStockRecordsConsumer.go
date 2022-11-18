@@ -37,12 +37,9 @@ func LaunchProductStockRecordsConsumer(dbContext db.DbContext) {
 
 			product.Quantity = new(float32)
 			*product.Quantity = *&(message.After.ActualQuantity)
-			product, err = prodRep.Update(models.UpdateProductRequest{
-				Id:          product.Id,
-				Name:        product.Name,
-				Description: product.Description,
-				UpdatedAt:   product.UpdatedAt,
-				Quantity:    product.Quantity,
+			product, err = prodRep.UpdateByEvent(models.UpdateProductEvent{
+				Id:       product.Id,
+				Quantity: product.Quantity,
 			})
 
 			if err != nil {

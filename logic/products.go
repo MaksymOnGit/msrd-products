@@ -16,6 +16,7 @@ type ProductsRepository interface {
 	Insert(product models.CreateProductRequest) (*models.Product, error)
 	FindById(id string) (*models.Product, error)
 	Update(product models.UpdateProductRequest) (*models.Product, error)
+	UpdateByEvent(product models.UpdateProductEvent) (*models.Product, error)
 	SoftDeleteById(id string) error
 	SoftBatchDeleteById(ids []string) error
 	QueryProducts(request models.QueryRequest) (error, models.QueryResponse[models.Product])
@@ -54,6 +55,26 @@ func (r productRepository) Insert(product models.CreateProductRequest) (newProdu
 }
 
 func (r productRepository) Update(product models.UpdateProductRequest) (newProduct *models.Product, err error) {
+	product.UpdatedAt = time.Now()
+
+	_, err = r.collection.UpdateOne(r.context, bson.M{"_id": product.Id}, bson.M{"$set": product})
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	err = r.collection.FindOne(r.context, bson.M{"_id": product.Id}).Decode(&newProduct)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	return
+}
+
+func (r productRepository) UpdateByEvent(product models.UpdateProductEvent) (newProduct *models.Product, err error) {
 	product.UpdatedAt = time.Now()
 
 	_, err = r.collection.UpdateOne(r.context, bson.M{"_id": product.Id}, bson.M{"$set": product})

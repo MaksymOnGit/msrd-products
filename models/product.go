@@ -26,5 +26,10 @@ type UpdateProductRequest struct {
 	Name        string             `json:"name" bson:"name" validate:"required"`
 	Description string             `json:"description" bson:"description"`
 	UpdatedAt   time.Time          `json:"-" bson:"updated_at"`
-	Quantity    *float32           `json:"-" bson:"quantity"`
+}
+
+type UpdateProductEvent struct {
+	Id        primitive.ObjectID `bson:"_id" validate:"required"`
+	Quantity  *float32           `bson:"quantity"`
+	UpdatedAt time.Time          `bson:"updated_at"`
 }
