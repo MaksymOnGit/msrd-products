@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"msrd-products/db"
+	"msrd-products/kafka/consumers"
 	"msrd-products/routes"
 	"msrd-products/utils"
 	"os"
@@ -26,6 +27,11 @@ func main() {
 
 	if err != nil {
 		log.Fatal("Error loading database")
+	}
+
+	if os.Getenv("APP_MODE") == "STOCKS_CONSUMER" {
+		consumers.LaunchProductStockRecordsConsumer(dbContext)
+		return
 	}
 
 	app := fiber.New()

@@ -11,6 +11,7 @@ type Product struct {
 	Description string             `json:"description" bson:"description"`
 	CreatedAt   time.Time          `json:"created_at,omitempty" bson:"created_at"`
 	UpdatedAt   time.Time          `json:"updated_at,omitempty" bson:"updated_at"`
+	Quantity    *float32           `json:"quantity" bson:"quantity"`
 }
 
 type CreateProductRequest struct {
@@ -25,4 +26,5 @@ type UpdateProductRequest struct {
 	Name        string             `json:"name" bson:"name" validate:"required"`
 	Description string             `json:"description" bson:"description"`
 	UpdatedAt   time.Time          `json:"-" bson:"updated_at"`
+	Quantity    *float32           `json:"-" bson:"quantity"`
 }
