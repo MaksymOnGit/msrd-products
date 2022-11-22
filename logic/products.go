@@ -157,8 +157,8 @@ func (r productRepository) QueryProducts(request models.QueryRequest) (err error
 
 	curs, err := r.collection.Find(r.context, bson.M{"deleted": nil}, &opts)
 
-	var product models.Product
 	for curs.Next(r.context) {
+		var product models.Product
 		err = curs.Decode(&product)
 		if err != nil {
 			log.Println(err)
