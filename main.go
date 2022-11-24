@@ -34,6 +34,11 @@ func main() {
 		return
 	}
 
+	if os.Getenv("APP_MODE") == "DOCUMENT_STATUS_CONSUMER" {
+		consumers.LaunchDocumentStatusConsumer(dbContext)
+		return
+	}
+
 	app := fiber.New()
 	app.Use(recover.New())
 	app.Use(func(c *fiber.Ctx) error {

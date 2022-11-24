@@ -12,6 +12,7 @@ import (
 type DbContext interface {
 	Dispose()
 	GetProductsCollection() *mongo.Collection
+	GetDocumentsCollection() *mongo.Collection
 }
 
 type connection struct {
@@ -57,6 +58,11 @@ func BuildDbContext(connectionString string, database string, configSetup func(c
 
 func (connection connection) GetProductsCollection() *mongo.Collection {
 	collection := connection.database.Collection("products")
+	return collection
+}
+
+func (connection connection) GetDocumentsCollection() *mongo.Collection {
+	collection := connection.database.Collection("documents")
 	return collection
 }
 
