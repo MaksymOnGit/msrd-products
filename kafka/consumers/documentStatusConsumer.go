@@ -14,7 +14,7 @@ import (
 
 func LaunchDocumentStatusConsumer(dbContext db.DbContext) {
 
-	err := intrnalKafka.Subscribe[kafkaModels.PostgreSqlEvent]("MsrdStocs.public.document_statuses", func(message kafkaModels.PostgreSqlEvent) bool {
+	err := intrnalKafka.Subscribe[kafkaModels.PostgreSqlEvent]("MsrdStocks.public.document_statuses", func(message kafkaModels.PostgreSqlEvent) bool {
 		if message.Operation == "r" || message.Operation == "c" || message.Operation == "u" {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
@@ -26,7 +26,7 @@ func LaunchDocumentStatusConsumer(dbContext db.DbContext) {
 			}
 
 			if document == nil {
-				logrus.Warnln("Received non existing document id from MsrdStocs.public.document_statuses: %s", message.After.DocumentId)
+				logrus.Warnln("Received non existing document id from MsrdStocks.public.document_statuses: %s", message.After.DocumentId)
 				return false
 			}
 

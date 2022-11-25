@@ -14,7 +14,7 @@ import (
 
 func LaunchProductStockRecordsConsumer(dbContext db.DbContext) {
 
-	err := intrnalKafka.Subscribe[kafkaModels.PostgreSqlEvent]("MsrdStocs.public.stock_records", func(message kafkaModels.PostgreSqlEvent) bool {
+	err := intrnalKafka.Subscribe[kafkaModels.PostgreSqlEvent]("MsrdStocks.public.stock_records", func(message kafkaModels.PostgreSqlEvent) bool {
 		if message.Operation == "r" || message.Operation == "c" {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
@@ -26,12 +26,12 @@ func LaunchProductStockRecordsConsumer(dbContext db.DbContext) {
 			}
 
 			if product == nil {
-				logrus.Warnln("Received non existing product id from MsrdStocs.public.stock_records: %s", message.After.ProductId)
+				logrus.Warnln("Received non existing product id from MsrdStocks.public.stock_records: %s", message.After.ProductId)
 				return false
 			}
 
 			if &message.After.ActualQuantity == product.Quantity {
-				logrus.Warnln("Nothing to update MsrdStocs.public.stock_records: %s", message.After.ProductId)
+				logrus.Warnln("Nothing to update MsrdStocks.public.stock_records: %s", message.After.ProductId)
 				return false
 			}
 
