@@ -6,9 +6,11 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	jwtware "github.com/gofiber/jwt/v3"
+	"github.com/gofiber/swagger"
 	"github.com/joho/godotenv"
 	"log"
 	"msrd-products/db"
+	_ "msrd-products/docs"
 	"msrd-products/kafka/consumers"
 	"msrd-products/routes"
 	"msrd-products/utils"
@@ -47,6 +49,8 @@ func main() {
 	})
 	app.Use(cors.New())
 	app.Use(logger.New())
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	authMiddleware := jwtware.New(jwtware.Config{
 		TokenLookup: "header:Authorization",
