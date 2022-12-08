@@ -1,0 +1,224 @@
+definitions:
+  models.CreateProductRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  models.Product:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      quantity:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  models.QueryRequest:
+    properties:
+      offset:
+        minimum: 0
+        type: integer
+      rows:
+        maximum: 30
+        minimum: 5
+        type: integer
+      sortField:
+        type: string
+      sortOrder:
+        enum:
+        - -1
+        - 0
+        - 1
+        type: integer
+    required:
+    - rows
+    type: object
+  models.QueryResponse-models_Product:
+    properties:
+      isNext:
+        type: boolean
+      isPrev:
+        type: boolean
+      page:
+        type: integer
+      recordsPerPageCount:
+        type: integer
+      result:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      totalPagesCount:
+        type: integer
+      totalRecordsCount:
+        type: integer
+    type: object
+  models.UpdateProductRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
+info:
+  contact: {}
+paths:
+  /api/products:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: New product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: creates a product record
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: updates a product record
+  /api/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: deletes one product by id
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: get one product by id
+  /api/products/batchDelete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Product ids
+        in: body
+        name: queryRequest
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: batch delete of products
+  /api/products/query:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Query products
+        in: body
+        name: queryRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.QueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.QueryResponse-models_Product'
+      summary: query products
+swagger: "2.0"
